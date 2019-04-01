@@ -11,8 +11,10 @@ import json
 
 # You can get a CONSUMER_KEY and CONSUMER_SECRET for your app here:
 # http://www.khanacademy.org/api-apps/register
-CONSUMER_KEY = ""
-CONSUMER_SECRET = ""
+CONSUMER_KEY = "8hBQx2rmajKxGZJt"
+CONSUMER_SECRET = "GPNfJa6q7gYZTP4C"
+# CONSUMER_KEY = "JqTcQjbh9NncCBJy"
+# CONSUMER_SECRET = "BwHpLJHydvhSqHtJ"
 
 # Oauth configuration values described at:
 # https://github.com/Khan/khan-api/wiki/Khan-Academy-API-Authentication
@@ -83,9 +85,10 @@ class KhanAcademySignIn:
             request_token_secret,
             data={"oauth_verifier": request.args["oauth_verifier"]},
         )
+        ka_user = None # I don't know if this information is in one of the objects. I could scrape it from the HTML tag on the redirect to accept, as shown here: <div class="username">@MrAutore</div>
         access_token = oauth_session.access_token
         access_token_secret = oauth_session.access_token_secret
-        return access_token, access_token_secret
+        return ka_user, access_token, access_token_secret
 
 
 class KhanAPI:
@@ -237,6 +240,7 @@ class KhanAPI:
         :param: identifier, one of three identifiers:
           username, userid, email
         """
+        # I think it should be URL + identifier. params needs to be changed to include the keys or tokens, as specified in the rauth.session documentation
         return self.get_resource("/api/v1/user", params=identifier)
 
     def user_exercises(self, identifier={}, exercises=[]):
